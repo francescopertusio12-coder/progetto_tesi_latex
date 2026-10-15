@@ -1,0 +1,145 @@
+\chapter{Steady RANS Validation at Cruise Conditions}
+\label{ch:rans_validation}
+
+% =====================================================================
+% SKELETON - ogni sezione contiene TODO con cosa scrivere.
+% Il paragrafo originale e' conservato in fondo alla sezione 1.
+% =====================================================================
+
+\section{Introduction and objectives}
+\label{sec:val_intro}
+
+Since its introduction for the fourth AIAA CFD Drag Prediction Workshop (DPW-IV), the NASA Common Research Model (CRM) has become one of the reference configurations for the validation of CFD methods applied to transonic transport aircraft~\cite{vassberg2008}. It combines a contemporary supercritical wing, with an aspect ratio of 9 and a quarter-chord sweep angle of \SI{35}{\degree}, with a fuselage representative of a wide-body airliner, and it was designed to cruise at $M_\infty = 0.85$ with a lift coefficient $C_L = 0.5$. The geometry is publicly available and, over the years, the model has been tested in several transonic wind tunnels and simulated with a wide variety of solvers, grids and turbulence models, many of them within the DPW series. The resulting body of experimental and numerical data makes the CRM a natural starting point for this work, which moves from the steady cruise condition to the unsteady buffet regime.
+
+Before turning to high-fidelity simulations of buffet, however, it is necessary to verify that the numerical chain as a whole, from the computational grid to the physical model and the flow solver, gives reliable results in a simpler situation. The design cruise point is well suited to this purpose, since the flow is steady and largely attached and reference data are abundant. This chapter presents such a validation, carried out by means of steady Reynolds-Averaged Navier-Stokes (RANS) simulations of the CRM in the wing-body-tail configuration (WBT0) at $M_\infty = 0.85$ and $Re = 5\times10^{6}$, based on the mean aerodynamic chord.
+
+The work was carried out in two stages. In the first one, the computational grids generated with Ansys Fluent Meshing were assessed with the commercial solver Ansys Fluent. Relying on a well-established code at this stage made it possible to evaluate the grids and the meshing strategy on their own, by comparing the results with the experimental measurements of Rivers et al.~\cite{rivers2015} and with the numerical results of Du and Agarwal~\cite{du2017}, which were obtained with the same software. After a mesh sensitivity analysis, the reference grid was used to compare the $k$--$\omega$ and Spalart--Allmaras turbulence models and to perform an angle-of-attack sweep from \SI{0}{\degree} to \SI{3}{\degree}. Higher incidences were not considered, since the growth of shock-induced separation progressively drives the flow towards buffet, a regime that a steady RANS approach cannot describe.
+
+In the second stage, the same grid was used to run Spalart--Allmaras simulations with STREAmS, the in-house solver developed at Sapienza University of Rome that is also employed for the high-fidelity simulations presented later in this thesis. Since the grid and the turbulence model are the same as in the Fluent computations, the differences between the two solutions can be attributed to the solver itself. The STREAmS results are compared with both the Fluent solution and the experimental data.
+
+The chapter follows the same order: after the description of the test case and of the numerical setup, the Fluent results are presented and discussed, and the validation of STREAmS concludes the chapter.
+
+\section{Test case description}
+\label{sec:val_testcase}
+
+\subsection{Geometry and reference quantities}
+\label{sec:val_geometry}
+
+The geometry considered in this work is the wing/body/horizontal tail configuration of the CRM with the stabiliser set at \SI{0}{\degree} incidence (WBT0), in the full-scale version released for DPW-IV~\cite{vassberg2008}. The models tested in wind tunnels are scaled replicas of this geometry: the one used in the ETW and NTF campaigns has a mean aerodynamic chord of \SI{7.45}{in}, which corresponds to a scale factor of about 2.7\%~\cite{rivers2015}. Working on the full-scale geometry does not affect the comparison with the experiments, provided that the relevant similarity parameters are reproduced, as discussed in Section~\ref{sec:val_flow}.
+
+Since both the configuration and the flow at zero sideslip are symmetric with respect to the vertical plane containing the fuselage axis, only half of the aircraft is simulated and a symmetry condition is imposed on that plane. Aerodynamic coefficients are therefore computed with half of the reference area, so that they correspond to those of the complete aircraft. The reference quantities are summarised in Table~\ref{tab:val_refquantities}.
+% TODO: se si calcola C_M, aggiungere: "the pitching moment is evaluated about the moment reference centre of the DPW-IV geometry" + riga in tabella
+
+\begin{table}[htbp]
+  \centering
+  \caption{Reference quantities of the full-scale CRM.}
+  \label{tab:val_refquantities}
+  \begin{tabular}{lcc}
+    \hline
+    Quantity & Value & SI units \\
+    \hline
+    Reference area, $S_\mathrm{ref}$ & \SI{594720}{in^2} & \SI{383.69}{m^2} \\
+    Half-model reference area, $S_\mathrm{ref}/2$ & \SI{297360}{in^2} & \SI{191.845}{m^2} \\
+    Mean aerodynamic chord, $c_\mathrm{ref}$ & \SI{275.8}{in} & \SI{7.005}{m} \\
+    Wing span, $b$ & \SI{2313.4}{in} & \SI{58.76}{m} \\
+    Aspect ratio, $AR$ & \multicolumn{2}{c}{9.0} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Flow conditions}
+\label{sec:val_flow}
+
+The simulations reproduce the cruise condition at $M_\infty = 0.85$ and $Re = 5\times10^{6}$, based on $c_\mathrm{ref}$, which is the condition adopted in DPW-IV and at which the CRM has been tested in all the facilities mentioned above. Because the computational geometry is about 37 times larger than the wind tunnel model, matching the experimental Reynolds number at the same Mach number requires a correspondingly lower freestream density. The freestream state has therefore been derived from the two similarity parameters, once the temperature has been fixed.
+
+The freestream static temperature is set to $T_\infty = \SI{310.83}{K}$ (\ang{100}F), the reference temperature of the DPW-IV test case. The dynamic viscosity follows from Sutherland's law,
+\begin{equation}
+  \mu_\infty = \mu_0 \left( \frac{T_\infty}{T_0} \right)^{3/2} \frac{T_0 + S}{T_\infty + S},
+  \label{eq:val_sutherland}
+\end{equation}
+with $\mu_0 = \SI{1.716e-5}{kg/(m.s)}$, $T_0 = \SI{273.11}{K}$ and $S = \SI{110.56}{K}$, giving $\mu_\infty = \SI{1.897e-5}{kg/(m.s)}$. The freestream velocity is obtained from the Mach number and the speed of sound of the gas, treated as calorically perfect with $\gamma = 1.4$,
+\begin{equation}
+  U_\infty = M_\infty \sqrt{\gamma R T_\infty},
+  \label{eq:val_velocity}
+\end{equation}
+and the density follows from the definition of the Reynolds number. Combining it with the equation of state yields the freestream pressure,
+\begin{equation}
+  \rho_\infty = \frac{Re\, \mu_\infty}{U_\infty\, c_\mathrm{ref}}, \qquad p_\infty = \rho_\infty R T_\infty .
+  \label{eq:val_pressure}
+\end{equation}
+The resulting values are listed in Table~\ref{tab:val_flowconditions}. The static pressure, of about \SI{4}{kPa}, has no physical meaning in itself: it is simply the value that, on the full-scale geometry, restores the ratio between inertial and viscous forces of the wind tunnel test.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Freestream conditions used in the simulations.}
+  \label{tab:val_flowconditions}
+  \begin{tabular}{lc}
+    \hline
+    Quantity & Value \\
+    \hline
+    Mach number, $M_\infty$ & 0.85 \\
+    Reynolds number, $Re$ (based on $c_\mathrm{ref}$) & $5\times10^{6}$ \\
+    Static temperature, $T_\infty$ & \SI{310.83}{K} \\
+    Dynamic viscosity, $\mu_\infty$ & \SI{1.897e-5}{kg/(m.s)} \\
+    Velocity, $U_\infty$ & \SI{300.3}{m/s} \\
+    Density, $\rho_\infty$ & \SI{0.0451}{kg/m^3} \\
+    Static pressure, $p_\infty$ & \SI{4022}{Pa} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+The reference cruise condition is computed at an angle of attack $\alpha = \SI{2.38}{\degree}$, for which the Fluent solution gives a lift coefficient very close to the design value $C_L = 0.5$. The same incidence is used for all the comparisons at cruise conditions, including those between the two turbulence models and between Fluent and STREAmS. The boundary layer is assumed to be fully turbulent: in the experiments transition was fixed by trip dots placed at 10\% of the local chord~\cite{rivers2015}, so that the laminar region is limited to a small portion close to the leading edge.
+
+\subsection{Reference data}
+\label{sec:val_refdata}
+
+The experimental data used for the comparison are taken from the ETW test campaign carried out within the ESWIRP project and reported by Rivers et al.~\cite{rivers2015}. Among the measurements available at $M_\infty = 0.85$ and $Re = 5\times10^{6}$, the data point with the lift coefficient closest to the design value was selected (run 153, point 345), corresponding to $\alpha = \SI{2.88}{\degree}$ and $C_L = 0.498$. The comparison covers all the six spanwise stations at which pressure distributions are reported for this point, $\eta = 0.201$, $0.283$, $0.502$, $0.603$, $0.846$ and $0.950$, where $\eta$ is the spanwise coordinate normalised by the semi-span; the measurement uncertainty on $C_p$ is estimated at $\pm 0.0026$~\cite{rivers2015}.
+
+The experimental lift coefficient is reached at an angle of attack about half a degree higher than in the computations. For this reason the comparison is carried out at matched lift coefficient rather than at matched incidence, which is also the criterion followed in~\cite{rivers2015} to compare data from different facilities. The difference in incidence reflects effects that are present in the experiment but not in the simulations, such as the deformation of the wing under load and the interference of the model support, which was not corrected for in the published data~\cite{rivers2015}; this point is discussed further in Section~\ref{sec:val_cruise}.
+
+The numerical reference is provided by Du and Agarwal~\cite{du2017}, who computed the same configuration and flow conditions with Ansys Fluent, using both the Spalart--Allmaras and the SST $k$--$\omega$ turbulence models on a structured grid of about 11 million nodes. Their results include the lift and drag coefficients over the range $\alpha = \SIrange{0}{4}{\degree}$, and are used here mainly for the comparison of the integral coefficients and of their variation with the angle of attack.
+
+
+\section{Grid generation strategy}
+\label{sec:val_grid}
+% TODO: Fluent Meshing, tipo di elementi, inflation layer (y+ ~ 1),
+%       growth rate, zone di raffinamento (LE/TE, urto, side-of-body),
+%       dimensione del dominio e farfield.
+
+\section{Numerical setup}
+\label{sec:val_setup}
+% TODO: solver density/pressure-based, schemi, k-omega (SST?),
+%       condizioni al contorno, inizializzazione, criteri di convergenza.
+% TODO: giustificazione di alpha fissato invece di CL fissato.
+
+\section{Mesh sensitivity analysis}
+\label{sec:val_mesh}
+% TODO: tabella famiglia di griglie (n. celle, y+, ...),
+%       CL/CD/CM vs N^{-2/3}, eventuale Richardson/GCI, mesh scelta.
+
+\section{Validation at cruise conditions}
+\label{sec:val_cruise}
+\subsection{Integral coefficients}
+% TODO: CL, CD (pressione/attrito), CM vs paper numerico.
+\subsection{Pressure distributions}
+% TODO: Cp alle stazioni eta vs sperimentale e numerico; posizione urto.
+
+\section{Turbulence model sensitivity}
+\label{sec:val_turb}
+% TODO: k-omega vs SA alla condizione di crociera.
+
+\section{Angle-of-attack sweep}
+\label{sec:val_alpha}
+% TODO: alpha = 0-3 deg; CL-alpha, polare, CM-alpha vs sperimentale/numerico;
+%       evoluzione dell'urto; limite a 3 deg per vicinanza del buffet.
+
+\section{Validation of STREAmS}
+\label{sec:val_streams}
+\subsection{Solver and setup}
+% TODO: richiamo al capitolo dei metodi, trasferimento della mesh, setup SA.
+\subsection{Comparison with Fluent and experimental data}
+% TODO: coefficienti integrali + Cp, STREAmS vs Fluent-SA vs sperimentale.
+
+\section{Summary and implications for the unsteady analysis}
+\label{sec:val_summary}
+% TODO: sintesi dell'accordo, limiti, cosa si porta nella fase WMLES.

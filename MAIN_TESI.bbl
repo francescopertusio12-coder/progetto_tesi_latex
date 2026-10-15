@@ -1,0 +1,24 @@
+\begin{thebibliography}{1}
+
+\bibitem{du2017}
+\textsc{Du, P. and Agarwal, R.~K.}
+\newblock Drag prediction of {NASA} common research models using different turbulence models.
+\newblock In \emph{35th AIAA Applied Aerodynamics Conference, AIAA AVIATION Forum}. Denver, CO (2017).
+\newblock AIAA Paper 2017-4233.
+\newblock \href {http://dx.doi.org/10.2514/6.2017-4233} {\path{doi:10.2514/6.2017-4233}}.
+
+\bibitem{rivers2015}
+\textsc{Rivers, M.~B., Quest, J., and Rudnik, R.}
+\newblock Comparison of the {NASA} common research model {European} transonic wind tunnel test data to {NASA} test data.
+\newblock In \emph{53rd AIAA Aerospace Sciences Meeting, AIAA SciTech Forum}. Kissimmee, FL (2015).
+\newblock AIAA Paper 2015-1093.
+\newblock \href {http://dx.doi.org/10.2514/6.2015-1093} {\path{doi:10.2514/6.2015-1093}}.
+
+\bibitem{vassberg2008}
+\textsc{Vassberg, J.~C., DeHaan, M.~A., Rivers, S.~M., and Wahls, R.~A.}
+\newblock Development of a common research model for applied {CFD} validation studies.
+\newblock In \emph{26th AIAA Applied Aerodynamics Conference}. Honolulu, HI (2008).
+\newblock AIAA Paper 2008-6919.
+\newblock \href {http://dx.doi.org/10.2514/6.2008-6919} {\path{doi:10.2514/6.2008-6919}}.
+
+\end{thebibliography}
