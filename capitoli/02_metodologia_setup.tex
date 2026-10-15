@@ -25,7 +25,7 @@ The chapter follows the same order: after the description of the test case and o
 \subsection{Geometry and reference quantities}
 \label{sec:val_geometry}
 
-The geometry considered in this work is the wing/body/horizontal tail configuration of the CRM with the stabiliser set at \SI{0}{\degree} incidence (WBT0), in the full-scale version released for DPW-IV~\cite{vassberg2008}. The models tested in wind tunnels are scaled replicas of this geometry: the one used in the ETW and NTF campaigns has a mean aerodynamic chord of \SI{7.45}{in}, which corresponds to a scale factor of about 2.7\%~\cite{rivers2015}. Working on the full-scale geometry does not affect the comparison with the experiments, provided that the relevant similarity parameters are reproduced, as discussed in Section~\ref{sec:val_flow}.
+The geometry considered in this work is the wing/body/horizontal tail configuration of the CRM with the stabiliser set at \SI{0}{\degree} incidence (WBT0), in the full-scale version released for DPW-IV~\cite{vassberg2008}. The models tested in wind tunnels are scaled replicas of this geometry: the one used in the ETW and NTF campaigns has a mean aerodynamic chord of \SI{7.45}{in}, which corresponds to a scale factor of about 2.7\%~\cite{rivers2015}. Since the flow condition is defined through non-dimensional parameters, computations on the full-scale geometry and measurements on the scaled models refer to the same aerodynamic condition, as discussed in Section~\ref{sec:val_flow}.
 
 Since both the configuration and the flow at zero sideslip are symmetric with respect to the vertical plane containing the fuselage axis, only half of the aircraft is simulated and a symmetry condition is imposed on that plane. Aerodynamic coefficients are therefore computed with half of the reference area, so that they correspond to those of the complete aircraft. The reference quantities are summarised in Table~\ref{tab:val_refquantities}.
 % TODO: se si calcola C_M, aggiungere: "the pitching moment is evaluated about the moment reference centre of the DPW-IV geometry" + riga in tabella
@@ -50,24 +50,21 @@ Since both the configuration and the flow at zero sideslip are symmetric with re
 \subsection{Flow conditions}
 \label{sec:val_flow}
 
-The simulations reproduce the cruise condition at $M_\infty = 0.85$ and $Re = 5\times10^{6}$, based on $c_\mathrm{ref}$, which is the condition adopted in DPW-IV and at which the CRM has been tested in all the facilities mentioned above. Because the computational geometry is about 37 times larger than the wind tunnel model, matching the experimental Reynolds number at the same Mach number requires a correspondingly lower freestream density. The freestream state has therefore been derived from the two similarity parameters, once the temperature has been fixed.
+The simulations are performed at the reference condition of the CRM, $M_\infty = 0.85$, $C_L = 0.5$ and $Re = 5\times10^{6}$, based on $c_\mathrm{ref}$. This is the condition defined for the main test case of DPW-IV, which combines the design Mach number and lift coefficient of the aircraft with a Reynolds number representative of wind tunnel testing~\cite{vassberg2010}, lower than the one typical of flight. The same condition was retained in the following editions of the workshop and has been adopted both in the experimental campaigns on the CRM~\cite{rivers2015} and in most of the numerical studies of this configuration, so that it has become the baseline for any validation on the CRM.
 
-The freestream static temperature is set to $T_\infty = \SI{310.83}{K}$ (\ang{100}F), the reference temperature of the DPW-IV test case. The dynamic viscosity follows from Sutherland's law,
+Since the DPW-IV geometry is defined at full scale, with $c_\mathrm{ref} = \SI{7.005}{m}$, the freestream state that reproduces these conditions has to be derived from the similarity parameters. The DPW-IV specification also fixes the reference temperature at \ang{100}F; accordingly, the freestream static temperature is set to $T_\infty = \SI{310.83}{K}$ and the dynamic viscosity is computed with Sutherland's law,
 \begin{equation}
   \mu_\infty = \mu_0 \left( \frac{T_\infty}{T_0} \right)^{3/2} \frac{T_0 + S}{T_\infty + S},
   \label{eq:val_sutherland}
 \end{equation}
-with $\mu_0 = \SI{1.716e-5}{kg/(m.s)}$, $T_0 = \SI{273.11}{K}$ and $S = \SI{110.56}{K}$, giving $\mu_\infty = \SI{1.897e-5}{kg/(m.s)}$. The freestream velocity is obtained from the Mach number and the speed of sound of the gas, treated as calorically perfect with $\gamma = 1.4$,
+with $\mu_0 = \SI{1.716e-5}{kg/(m.s)}$, $T_0 = \SI{273.11}{K}$ and $S = \SI{110.56}{K}$. The freestream velocity follows from the Mach number, treating air as a calorically perfect gas with $\gamma = 1.4$, while the density is obtained from the definition of the Reynolds number and the pressure from the equation of state:
 \begin{equation}
-  U_\infty = M_\infty \sqrt{\gamma R T_\infty},
-  \label{eq:val_velocity}
+  U_\infty = M_\infty \sqrt{\gamma R T_\infty}, \qquad
+  \rho_\infty = \frac{Re\, \mu_\infty}{U_\infty\, c_\mathrm{ref}}, \qquad
+  p_\infty = \rho_\infty R T_\infty .
+  \label{eq:val_freestream}
 \end{equation}
-and the density follows from the definition of the Reynolds number. Combining it with the equation of state yields the freestream pressure,
-\begin{equation}
-  \rho_\infty = \frac{Re\, \mu_\infty}{U_\infty\, c_\mathrm{ref}}, \qquad p_\infty = \rho_\infty R T_\infty .
-  \label{eq:val_pressure}
-\end{equation}
-The resulting values are listed in Table~\ref{tab:val_flowconditions}. The static pressure, of about \SI{4}{kPa}, has no physical meaning in itself: it is simply the value that, on the full-scale geometry, restores the ratio between inertial and viscous forces of the wind tunnel test.
+The resulting values are listed in Table~\ref{tab:val_flowconditions}. The low density and pressure, far from those encountered by the aircraft at cruise altitude, are a direct consequence of imposing a wind tunnel Reynolds number on a full-scale geometry.
 
 \begin{table}[htbp]
   \centering
@@ -93,11 +90,38 @@ The reference cruise condition is computed at an angle of attack $\alpha = \SI{2
 \subsection{Reference data}
 \label{sec:val_refdata}
 
-The experimental data used for the comparison are taken from the ETW test campaign carried out within the ESWIRP project and reported by Rivers et al.~\cite{rivers2015}. Among the measurements available at $M_\infty = 0.85$ and $Re = 5\times10^{6}$, the data point with the lift coefficient closest to the design value was selected (run 153, point 345), corresponding to $\alpha = \SI{2.88}{\degree}$ and $C_L = 0.498$. The comparison covers all the six spanwise stations at which pressure distributions are reported for this point, $\eta = 0.201$, $0.283$, $0.502$, $0.603$, $0.846$ and $0.950$, where $\eta$ is the spanwise coordinate normalised by the semi-span; the measurement uncertainty on $C_p$ is estimated at $\pm 0.0026$~\cite{rivers2015}.
+The results are compared with two kinds of reference data: experimental measurements and numerical results from the literature. The sources used and the quantities taken from each of them are summarised in Table~\ref{tab:val_refdata}.
 
-The experimental lift coefficient is reached at an angle of attack about half a degree higher than in the computations. For this reason the comparison is carried out at matched lift coefficient rather than at matched incidence, which is also the criterion followed in~\cite{rivers2015} to compare data from different facilities. The difference in incidence reflects effects that are present in the experiment but not in the simulations, such as the deformation of the wing under load and the interference of the model support, which was not corrected for in the published data~\cite{rivers2015}; this point is discussed further in Section~\ref{sec:val_cruise}.
+The experimental data are taken from the work of Rivers et al.~\cite{rivers2015}, who compared the measurements obtained on the same CRM model in three facilities, the NASA Langley National Transonic Facility (NTF), the NASA Ames \SI{11}{ft} Transonic Wind Tunnel and the European Transonic Wind Tunnel (ETW), at different conditions, including the DPW4 main test case, which is the one investigated here. 
 
-The numerical reference is provided by Du and Agarwal~\cite{du2017}, who computed the same configuration and flow conditions with Ansys Fluent, using both the Spalart--Allmaras and the SST $k$--$\omega$ turbulence models on a structured grid of about 11 million nodes. Their results include the lift and drag coefficients over the range $\alpha = \SIrange{0}{4}{\degree}$, and are used here mainly for the comparison of the integral coefficients and of their variation with the angle of attack.
+The main comparison concerns the wing pressure distributions, which describe in detail the flow at the cruise point. Among the measurements available at $M_\infty = 0.85$ and $Re = 5\times10^{6}$, the ETW data point with the lift coefficient closest to the design value was selected (run 153, point 345), corresponding to $\alpha = \SI{2.88}{\degree}$ and $C_L = 0.498$. Pressure distributions are reported for this point at six spanwise stations, $\eta = 0.201$, $0.283$, $0.502$, $0.603$, $0.846$ and $0.950$, where $\eta$ is the spanwise coordinate normalised by the semi-span, and all of them are used in the comparison; the measurement uncertainty on $C_p$ is estimated at $\pm 0.0026$~\cite{rivers2015}.
+
+The same work reports the lift, drag and pitching moment coefficients measured in the three facilities as functions of the angle of attack. These data are used, first, to assess the integral coefficients at the cruise point and, secondly, as a reference for the angle-of-attack sweep. The three data sets do not coincide exactly: at $M_\infty = 0.85$, for instance, the drag measured in the NTF is 16 counts lower than that measured in the ETW~\cite{rivers2015}. The spread among the facilities is therefore taken as a practical measure of the experimental uncertainty.
+
+The experimental lift coefficient is reached at an angle of attack about half a degree higher than in the computations. For this reason the pressure distributions are compared at matched lift coefficient rather than at matched incidence, which is also the criterion followed in~\cite{rivers2015} to compare data from different facilities. The difference in incidence reflects effects that are present in the experiment but not in the simulations, such as the deformation of the wing under load, which was measured during the tests, and the interference of the model support, for which the published data were not corrected~\cite{rivers2015}; this point is discussed further in Section~\ref{sec:val_cruise}.
+
+Among the many numerical studies of the CRM, three are used as references. The first is DPW-IV itself, whose test cases correspond to the configuration and flow condition considered here. The statistical analysis of the solutions submitted to the workshop~\cite{morrison2010} provides the median and the scatter, over about twenty RANS solutions obtained with different codes, of the angle of attack at $C_L = 0.5$, of the drag coefficient, split into its pressure and friction contributions, and of the pitching moment; the lift curves and drag polars computed for the angle-of-attack sweep of the workshop~\cite{vassberg2010} complete this set. The second reference is the work of Du and Agarwal~\cite{du2017}, who computed the same configuration with Ansys Fluent using both the Spalart--Allmaras and the SST $k$--$\omega$ models on a structured grid of about 11 million nodes; since it relies on the same solver, it allows a direct comparison of grids and solver settings.
+% PROVVISORIO: frase su Sclafani et al. (da togliere, insieme alla riga in tabella, se il paper non viene usato)
+Finally, Sclafani et al.~\cite{sclafani2010} compared the two turbulence models on the same configuration with the CFL3D and OVERFLOW solvers, and their results are used to interpret the differences between the SST $k$--$\omega$ and Spalart--Allmaras solutions.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Reference data used in this chapter.}
+  \label{tab:val_refdata}
+  \small
+  \begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{2.0cm}}
+    \hline
+    Source & Type & Data used & Section \\
+    \hline
+    Rivers et al.~\cite{rivers2015}, ETW run 153, point 345 & Experimental & $C_p$ at six spanwise stations ($\alpha = \SI{2.88}{\degree}$, $C_L = 0.498$) & \ref{sec:val_cruise} \\[2pt]
+    Rivers et al.~\cite{rivers2015}, NTF, Ames and ETW & Experimental & $C_L$, $C_D$ and $C_M$ versus $\alpha$ & \ref{sec:val_cruise}, \ref{sec:val_alpha} \\[2pt]
+    DPW-IV~\cite{vassberg2010,morrison2010} & Numerical, workshop ensemble & $\alpha$ at $C_L = 0.5$, $C_D$ (pressure and friction), $C_M$; lift curves and polars & \ref{sec:val_mesh}, \ref{sec:val_cruise}, \ref{sec:val_alpha} \\[2pt]
+    Du and Agarwal~\cite{du2017} & Numerical, Fluent (SA, SST) & $C_L$ and $C_D$ versus $\alpha$, drag polar & \ref{sec:val_cruise}, \ref{sec:val_turb}, \ref{sec:val_alpha} \\[2pt]
+    % PROVVISORIO: riga Sclafani et al.
+    Sclafani et al.~\cite{sclafani2010} & Numerical, CFL3D and OVERFLOW (SA, SST) & Effect of the turbulence model on shock position, $C_D$, $\alpha$ and $C_p$ & \ref{sec:val_turb} \\
+    \hline
+  \end{tabular}
+\end{table}
 
 
 \section{Grid generation strategy}
