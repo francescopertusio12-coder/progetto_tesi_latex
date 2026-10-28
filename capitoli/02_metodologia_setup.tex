@@ -25,7 +25,7 @@ The chapter follows the same order: after the description of the test case and o
 \subsection{Geometry and reference quantities}
 \label{sec:val_geometry}
 
-The geometry considered in this work is the wing/body/horizontal tail configuration of the CRM with the stabiliser set at \SI{0}{\degree} incidence (WBT0), in the full-scale version released for DPW-IV~\cite{vassberg2008}. The models tested in wind tunnels are scaled replicas of this geometry: the one used in the ETW and NTF campaigns has a mean aerodynamic chord of \SI{7.45}{in}, which corresponds to a scale factor of about 2.7\%~\cite{rivers2015}. Since the flow condition is defined through non-dimensional parameters, computations on the full-scale geometry and measurements on the scaled models refer to the same aerodynamic condition, as discussed in Section~\ref{sec:val_flow}.
+The geometry considered in this work is the wing/body/horizontal tail configuration of the CRM with the stabiliser set at \SI{0}{\degree} incidence (WBT0), in its nominal, undeformed full-scale version~\cite{vassberg2008}. The models tested in wind tunnels are scaled replicas of this geometry: the one used in the ETW and NTF campaigns has a mean aerodynamic chord of \SI{7.45}{in}, which corresponds to a scale factor of about 2.7\%~\cite{rivers2015}. Since the flow condition is defined through non-dimensional parameters, computations on the full-scale geometry and measurements on the scaled models refer to the same aerodynamic condition, as discussed in Section~\ref{sec:val_flow}.
 
 Since both the configuration and the flow at zero sideslip are symmetric with respect to the vertical plane containing the fuselage axis, only half of the aircraft is simulated and a symmetry condition is imposed on that plane. Aerodynamic coefficients are therefore computed with half of the reference area, so that they correspond to those of the complete aircraft. The reference quantities are summarised in Table~\ref{tab:val_refquantities}.
 % TODO: se si calcola C_M, aggiungere: "the pitching moment is evaluated about the moment reference centre of the DPW-IV geometry" + riga in tabella
@@ -123,12 +123,81 @@ Finally, Sclafani et al.~\cite{sclafani2010} compared the two turbulence models 
   \end{tabular}
 \end{table}
 
-
 \section{Grid generation strategy}
 \label{sec:val_grid}
-% TODO: Fluent Meshing, tipo di elementi, inflation layer (y+ ~ 1),
-%       growth rate, zone di raffinamento (LE/TE, urto, side-of-body),
-%       dimensione del dominio e farfield.
+
+The computational grids were generated with Ansys Fluent Meshing (2024 R2), using the Watertight Geometry workflow. The resulting grids are hybrid and unstructured: layers of prismatic cells are extruded from the walls to resolve the boundary layer, while the rest of the domain is filled with polyhedral cells. The meshing strategy aims at refining the grid where the flow is most complex, while keeping the overall number of cells affordable. Two kinds of regions are involved: those of high surface curvature, such as the leading and trailing edges and the wing--body junction, which are handled through the surface sizing controls, and those associated with flow features that extend into the field, namely the shock on the upper surface of the wing and the wake shed by the wing and the horizontal tail, which are covered by dedicated refinement regions. This section describes the baseline grid, from which the coarser and finer grids of the mesh sensitivity analysis were derived (Section~\ref{sec:val_mesh}). The adequacy of the grid is assessed through that analysis and through the a posteriori checks of grid quality and wall resolution reported in Section~\ref{sec:val_gridquality}.
+
+\subsection{Geometry and computational domain}
+\label{sec:val_domain}
+
+The geometry was imported from the CAD files distributed for DPW-VI, using the undeformed wing, and its surfaces were split into five groups: fuselage, wing, horizontal tail and the blunt trailing-edge bases of the wing and of the tail. This subdivision allows a different sizing control to be applied to each component, as described in Section~\ref{sec:val_surfmesh}.
+
+% FIGURA (da decidere): schema del dominio sul piano di simmetria con le quote (fig:val_domain)
+The computational domain consists of a half-cylinder closed upstream by a hemispherical cap, both with a radius of \SI{350}{m}, for an overall length of \SI{850}{m}. The aircraft is placed approximately on the axis of the domain, so that the outer boundaries lie about $47\,c_\mathrm{ref}$ upstream of the fuselage nose, about $74\,c_\mathrm{ref}$ downstream of it and $50\,c_\mathrm{ref}$ in the radial direction. These distances were chosen to keep the outer boundaries far enough from the aircraft to prevent them from influencing the solution.  
+
+\subsection{Surface mesh}
+\label{sec:val_surfmesh}
+The surface mesh was generated with curvature-based size functions. On each surface, the local face size is chosen so that a face does not span more than a prescribed angle along a curved surface (the curvature normal angle), within the bounds set by a minimum and a maximum size; the growth rate limits the size ratio between adjacent faces, ensuring a smooth variation of the resolution. Global bounds of \SI{2}{mm} and \SI{18}{m} were set, the largest sizes being reached only on the outer boundaries of the domain.
+
+Separate sizing controls were then applied to the aircraft components, with the values reported in Table~\ref{tab:val_meshparams}. On the wing and on the horizontal tail, the curvature control concentrates the faces around the leading edge, where the radius of curvature is smallest, so as to resolve the suction peak and the strong pressure gradients that follow it, while the maximum size of \SI{50}{mm} limits the face size on the flatter regions of the upper and lower surfaces. On the fuselage, a similar control refines the nose and the after-body, while larger faces are allowed on the cylindrical central part. Along the wing--body intersection the two controls meet and the local curvature is high, so that the mesh is naturally refined in the region where the side-of-body separation develops.
+
+The blunt trailing-edge bases of the wing and of the tail, whose mean thickness is about \SI{13}{mm}, were treated with a dedicated control, since the flow in these regions affects the development of the wake and contributes to the drag. Sizes between \SI{2}{mm} and \SI{4}{mm} were used, which place about four faces across the base thickness; this resolution was considered a reasonable compromise between the accuracy in these regions and the overall number of cells.
+
+% FIGURA (da decidere): dettagli della mesh di superficie (bordo d'attacco, bordo d'uscita, giunzione ala-fusoliera)
+
+\begin{table}[htbp]
+  \centering
+  \caption{Main parameters of the baseline grid.}
+  \label{tab:val_meshparams}
+  \small
+  \begin{tabular}{>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{5.0cm}}
+    \hline
+    Control & Applied to & Parameters \\
+    \hline
+    Surface mesh (global) & All surfaces & Size \SIrange{2}{18000}{mm} \\[2pt]
+    Curvature sizing & Fuselage & Size \SIrange{6}{60}{mm}, normal angle \SI{10}{\degree}, growth rate 1.2 \\[2pt]
+    Curvature sizing & Wing and horizontal tail & Size \SIrange{6}{50}{mm}, normal angle \SI{10}{\degree}, growth rate 1.2 \\[2pt]
+    Curvature sizing & Trailing-edge bases & Size \SIrange{2}{4}{mm}, normal angle \SI{8}{\degree}, growth rate 1.2 \\[2pt]
+    Body of influence & Supersonic region ($28.5 \times 27.7 \times \SI{11.2}{m}$) & Size \SI{200}{mm}, growth rate 1.2 \\[2pt]
+    Body of influence & Wake ($250.3 \times 40.0 \times \SI{28.3}{m}$) & Size \SI{500}{mm}, growth rate 1.2 \\[2pt]
+    Prism layers & All aircraft walls & Last-ratio method, first height \SI{0.074}{mm}, 30 layers, transition ratio 0.272 \\[2pt]
+    Volume mesh & Fluid domain & Polyhedra, growth rate 1.2, maximum size \SI{24}{m} \\
+    \hline
+    \multicolumn{3}{l}{Total number of cells: $27.6 \times 10^{6}$} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Boundary-layer and volume mesh}
+\label{sec:val_volmesh}
+Prismatic layers were grown from all the aircraft walls, including the trailing-edge bases, using the last-ratio method of Fluent Meshing, with the parameters listed in Table~\ref{tab:val_meshparams}. In this method the first-cell height, the number of layers and the transition ratio are prescribed, the latter being the ratio between the height of the last prismatic layer and the size of the first cell of the volume mesh. The growth rate of the layers is then determined locally so as to satisfy these constraints, which ensures a smooth transition from the boundary-layer mesh to the polyhedral cells of the core. Thirty layers were used, with the default transition ratio of 0.272.
+
+The first-cell height was chosen to obtain a wall resolution of the order of $y^+ \simeq 1$, as required to integrate the turbulence models down to the wall. A first estimate was obtained from the Schlichting correlation~\cite{schlichting1979} for the skin friction of a turbulent flat plate, evaluated at the Reynolds number based on $c_\mathrm{ref}$:
+\begin{equation}
+  C_f = \left[ 2 \log_{10}(Re) - 0.65 \right]^{-2.3}, \qquad
+  u_\tau = U_\infty \sqrt{C_f/2}, \qquad
+  \Delta y_1 = \frac{y^+ \nu_\infty}{u_\tau},
+  \label{eq:val_firstcell}
+\end{equation}
+which, for the conditions of Table~\ref{tab:val_flowconditions} and $y^+ = 1$, gives $\Delta y_1 \simeq \SI{0.037}{mm}$. Preliminary computations with this value returned values of $y^+$ well below unity over most of the surface. Since such a fine resolution is not required by the turbulence models and increases the aspect ratio of the near-wall cells, which can slow down the convergence of the simulations, the first-cell height was doubled to \SI{0.074}{mm}. With this value, $y^+$ remains of the order of unity over most of the walls and below 2 on almost all of the wall faces, as discussed in Section~\ref{sec:val_gridquality}.
+
+The rest of the domain was filled with polyhedral cells, with a growth rate of 1.2 and a maximum size of \SI{24}{m}, reached far from the aircraft.
+% FIGURA (da decidere): sezione dell'ala con i prismi e la transizione ai poliedri
+
+Two bodies of influence were used to control the cell size away from the walls. The first is a box enclosing the wing, \SI{28.5}{m} long, \SI{27.7}{m} wide in the spanwise direction and \SI{11.2}{m} high, inside which the cell size is limited to \SI{200}{mm}; its purpose is to resolve the supersonic region on the upper surface of the wing and the shock that terminates it. The second is a larger box, \SI{250.3}{m} long, \SI{40.0}{m} wide and \SI{28.3}{m} high, with a cell size of \SI{500}{mm}. It encloses the whole aircraft and extends far downstream, so as to refine with a uniform cell size the flow field around the aircraft and its entire wake, including the region behind the fuselage after-body.
+
+% FIGURA (da decidere): piano con i due livelli di raffinamento dei BOI
+
+The resulting baseline grid contains about $27.6 \times 10^{6}$ cells.
+
+\subsection{Grid quality and wall resolution}
+\label{sec:val_gridquality}
+The quality of the baseline grid was assessed with the metrics provided by Fluent. The orthogonal quality, which ranges from 0 for the worst cells to 1 for the best ones, has a minimum of 0.025 and an average of 0.92, while the Fluent documentation recommends a minimum above 0.01~\cite{fluent2024}. Only 534 cells, about 0.002\% of the total, have an orthogonal quality below 0.075, and the lowest value is found at the aft end of the fuselage, where the after-body closes on the symmetry plane. On the surface mesh the average skewness is 0.008, and values above 0.9 are limited to about thirty isolated faces, with a maximum of 0.96. The maximum aspect ratio, of about 2500, is found inside the prismatic layers near the wing--body junction. Such values are expected in the boundary-layer mesh, given the small first-cell height and the size of the surface faces, and the short side of these cells is normal to the wall, along the direction of the largest gradients.
+
+The wall resolution was checked a posteriori on the SST $k$--$\omega$ solution at cruise conditions. The area-weighted average of $y^+$ is 0.89 on the wing, 0.82 on the fuselage and 0.95 on the horizontal tail, and about 0.45 on the trailing-edge bases. On more than 99.9\% of the wall faces $y^+$ is below 2, and its maximum is about 2.4 on both the wing and the tail. The only exception is a single face at the aft end of the fuselage, at the same location as the minimum orthogonal quality, where $y^+$ reaches about 20; being limited to one face, it has a negligible effect on the integrated quantities. The highest values are found close to the leading edges, where the flow accelerates and the wall shear stress is largest, and the lowest ones on the upper surface of the wing downstream of the shock and near the trailing edges, where the skin friction decreases. The grid therefore provides the wall resolution of the order of unity targeted in Section~\ref{sec:val_volmesh}.
+
+% FIGURA (da decidere): contour di y+ su ala, fusoliera e coda
 
 \section{Numerical setup}
 \label{sec:val_setup}

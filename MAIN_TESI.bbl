@@ -2,62 +2,50 @@
 
 \bibitem{du2017}
 \textsc{Du, P. and Agarwal, R.~K.}
-\newblock Drag prediction of {NASA} common research models using different
-  turbulence models.
-\newblock In \emph{35th AIAA Applied Aerodynamics Conference, AIAA AVIATION
-  Forum}. Denver, CO (2017).
+\newblock Drag prediction of {NASA} common research models using different turbulence models.
+\newblock In \emph{35th AIAA Applied Aerodynamics Conference, AIAA AVIATION Forum}. Denver, CO (2017).
 \newblock AIAA Paper 2017-4233.
-\newblock \href {http://dx.doi.org/10.2514/6.2017-4233}
-  {\path{doi:10.2514/6.2017-4233}}.
+\newblock \href {http://dx.doi.org/10.2514/6.2017-4233} {\path{doi:10.2514/6.2017-4233}}.
 
 \bibitem{morrison2010}
 \textsc{Morrison, J.~H.}
-\newblock Statistical analysis of {CFD} solutions from the fourth {AIAA} drag
-  prediction workshop.
-\newblock In \emph{28th AIAA Applied Aerodynamics Conference}. Chicago, IL
-  (2010).
+\newblock Statistical analysis of {CFD} solutions from the fourth {AIAA} drag prediction workshop.
+\newblock In \emph{28th AIAA Applied Aerodynamics Conference}. Chicago, IL (2010).
 \newblock AIAA Paper 2010-4673.
-\newblock \href {http://dx.doi.org/10.2514/6.2010-4673}
-  {\path{doi:10.2514/6.2010-4673}}.
+\newblock \href {http://dx.doi.org/10.2514/6.2010-4673} {\path{doi:10.2514/6.2010-4673}}.
 
 \bibitem{rivers2015}
 \textsc{Rivers, M.~B., Quest, J., and Rudnik, R.}
-\newblock Comparison of the {NASA} common research model {European} transonic
-  wind tunnel test data to {NASA} test data.
-\newblock In \emph{53rd AIAA Aerospace Sciences Meeting, AIAA SciTech Forum}.
-  Kissimmee, FL (2015).
+\newblock Comparison of the {NASA} common research model {European} transonic wind tunnel test data to {NASA} test data.
+\newblock In \emph{53rd AIAA Aerospace Sciences Meeting, AIAA SciTech Forum}. Kissimmee, FL (2015).
 \newblock AIAA Paper 2015-1093.
-\newblock \href {http://dx.doi.org/10.2514/6.2015-1093}
-  {\path{doi:10.2514/6.2015-1093}}.
+\newblock \href {http://dx.doi.org/10.2514/6.2015-1093} {\path{doi:10.2514/6.2015-1093}}.
+
+\bibitem{schlichting1979}
+\textsc{Schlichting, H.}
+\newblock \emph{Boundary-Layer Theory}.
+\newblock McGraw-Hill, New York, 7th edn. (1979).
+\newblock ISBN 0-07-055334-3.
 
 \bibitem{sclafani2010}
-\textsc{Sclafani, A.~J., DeHaan, M.~A., Vassberg, J.~C., Rumsey, C.~L., and
-  Pulliam, T.~H.}
-\newblock Drag prediction for the {NASA} {CRM} wing-body-tail using {CFL3D} and
-  {OVERFLOW} on an overset mesh.
-\newblock In \emph{28th AIAA Applied Aerodynamics Conference}. Chicago, IL
-  (2010).
+\textsc{Sclafani, A.~J., DeHaan, M.~A., Vassberg, J.~C., Rumsey, C.~L., and Pulliam, T.~H.}
+\newblock Drag prediction for the {NASA} {CRM} wing-body-tail using {CFL3D} and {OVERFLOW} on an overset mesh.
+\newblock In \emph{28th AIAA Applied Aerodynamics Conference}. Chicago, IL (2010).
 \newblock AIAA Paper 2010-4219.
-\newblock \href {http://dx.doi.org/10.2514/6.2010-4219}
-  {\path{doi:10.2514/6.2010-4219}}.
+\newblock \href {http://dx.doi.org/10.2514/6.2010-4219} {\path{doi:10.2514/6.2010-4219}}.
 
 \bibitem{vassberg2008}
 \textsc{Vassberg, J.~C., DeHaan, M.~A., Rivers, S.~M., and Wahls, R.~A.}
-\newblock Development of a common research model for applied {CFD} validation
-  studies.
-\newblock In \emph{26th AIAA Applied Aerodynamics Conference}. Honolulu, HI
-  (2008).
+\newblock Development of a common research model for applied {CFD} validation studies.
+\newblock In \emph{26th AIAA Applied Aerodynamics Conference}. Honolulu, HI (2008).
 \newblock AIAA Paper 2008-6919.
-\newblock \href {http://dx.doi.org/10.2514/6.2008-6919}
-  {\path{doi:10.2514/6.2008-6919}}.
+\newblock \href {http://dx.doi.org/10.2514/6.2008-6919} {\path{doi:10.2514/6.2008-6919}}.
 
 \bibitem{vassberg2010}
 \textsc{Vassberg, J.~C., et~al.}
 \newblock Summary of the fourth {AIAA} {CFD} drag prediction workshop.
-\newblock In \emph{28th AIAA Applied Aerodynamics Conference}. Chicago, IL
-  (2010).
+\newblock In \emph{28th AIAA Applied Aerodynamics Conference}. Chicago, IL (2010).
 \newblock AIAA Paper 2010-4547.
-\newblock \href {http://dx.doi.org/10.2514/6.2010-4547}
-  {\path{doi:10.2514/6.2010-4547}}.
+\newblock \href {http://dx.doi.org/10.2514/6.2010-4547} {\path{doi:10.2514/6.2010-4547}}.
 
 \end{thebibliography}
