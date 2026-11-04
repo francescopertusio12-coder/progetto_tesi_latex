@@ -25,7 +25,36 @@ The chapter follows the same order: after the description of the test case and o
 \subsection{Geometry and reference quantities}
 \label{sec:val_geometry}
 
-The geometry considered in this work is the wing/body/horizontal tail configuration of the CRM with the stabiliser set at \SI{0}{\degree} incidence (WBT0), in its nominal, undeformed full-scale version~\cite{vassberg2008}. The models tested in wind tunnels are scaled replicas of this geometry: the one used in the ETW and NTF campaigns has a mean aerodynamic chord of \SI{7.45}{in}, which corresponds to a scale factor of about 2.7\%~\cite{rivers2015}. Since the flow condition is defined through non-dimensional parameters, computations on the full-scale geometry and measurements on the scaled models refer to the same aerodynamic condition, as discussed in Section~\ref{sec:val_flow}.
+The geometry considered in this work is the wing/body/horizontal tail configuration of the CRM with the stabiliser set at \SI{0}{\degree} incidence (WBT0), in its nominal, undeformed full-scale version~\cite{vassberg2008}, shown in Figure~\ref{fig:val_crm_iso}. The models tested in wind tunnels are scaled replicas of this geometry: the one used in the ETW and NTF campaigns has a mean aerodynamic chord of \SI{7.45}{in}, which corresponds to a scale factor of about 2.7\%~\cite{rivers2015}. Since the flow condition is defined through non-dimensional parameters, computations on the full-scale geometry and measurements on the scaled models refer to the same aerodynamic condition, as discussed in Section~\ref{sec:val_flow}.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}{0.8\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig_crm_iso}
+    \caption{Isometric view of the complete aircraft.}
+    \label{fig:val_crm_iso}
+  \end{subfigure}
+  \par\medskip
+  \begin{subfigure}{\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \node[anchor=south west, inner sep=0] (img) at (0,0) {\includegraphics[width=\linewidth]{fig_crm_eta_stazioni}};
+      \begin{scope}[x={(img.south east)}, y={(img.north west)}]
+        \node[anchor=west, font=\footnotesize] at (0.703,0.925) {$\eta = 0.950$};
+        \node[anchor=west, font=\footnotesize] at (0.679,0.826) {$\eta = 0.846$};
+        \node[anchor=west, font=\footnotesize] at (0.623,0.597) {$\eta = 0.603$};
+        \node[anchor=west, font=\footnotesize] at (0.600,0.501) {$\eta = 0.502$};
+        \node[anchor=west, font=\footnotesize] at (0.563,0.293) {$\eta = 0.283$};
+        \node[anchor=west, font=\footnotesize] at (0.557,0.215) {$\eta = 0.201$};
+      \end{scope}
+    \end{tikzpicture}
+    \caption{Top view of the half model with the spanwise stations of the pressure measurements.}
+    \label{fig:val_crm_eta}
+  \end{subfigure}
+  \caption{The NASA Common Research Model in the WBT0 configuration.}
+  \label{fig:val_crm}
+\end{figure}
 
 Since both the configuration and the flow at zero sideslip are symmetric with respect to the vertical plane containing the fuselage axis, only half of the aircraft is simulated and a symmetry condition is imposed on that plane. Aerodynamic coefficients are therefore computed with half of the reference area, so that they correspond to those of the complete aircraft. The reference quantities are summarised in Table~\ref{tab:val_refquantities}.
 % TODO: se si calcola C_M, aggiungere: "the pitching moment is evaluated about the moment reference centre of the DPW-IV geometry" + riga in tabella
@@ -94,7 +123,7 @@ The results are compared with two kinds of reference data: experimental measurem
 
 The experimental data are taken from the work of Rivers et al.~\cite{rivers2015}, who compared the measurements obtained on the same CRM model in three facilities, the NASA Langley National Transonic Facility (NTF), the NASA Ames \SI{11}{ft} Transonic Wind Tunnel and the European Transonic Wind Tunnel (ETW), at different conditions, including the DPW4 main test case, which is the one investigated here. 
 
-The main comparison concerns the wing pressure distributions, which describe in detail the flow at the cruise point. Among the measurements available at $M_\infty = 0.85$ and $Re = 5\times10^{6}$, the ETW data point with the lift coefficient closest to the design value was selected (run 153, point 345), corresponding to $\alpha = \SI{2.88}{\degree}$ and $C_L = 0.498$. Pressure distributions are reported for this point at six spanwise stations, $\eta = 0.201$, $0.283$, $0.502$, $0.603$, $0.846$ and $0.950$, where $\eta$ is the spanwise coordinate normalised by the semi-span, and all of them are used in the comparison; the measurement uncertainty on $C_p$ is estimated at $\pm 0.0026$~\cite{rivers2015}.
+The main comparison concerns the wing pressure distributions, which describe in detail the flow at the cruise point. Among the measurements available at $M_\infty = 0.85$ and $Re = 5\times10^{6}$, the ETW data point with the lift coefficient closest to the design value was selected (run 153, point 345), corresponding to $\alpha = \SI{2.88}{\degree}$ and $C_L = 0.498$. Pressure distributions are reported for this point at six spanwise stations, $\eta = 0.201$, $0.283$, $0.502$, $0.603$, $0.846$ and $0.950$, where $\eta$ is the spanwise coordinate normalised by the semi-span (Figure~\ref{fig:val_crm_eta}), and all of them are used in the comparison; the measurement uncertainty on $C_p$ is estimated at $\pm 0.0026$~\cite{rivers2015}.
 
 The same work reports the lift, drag and pitching moment coefficients measured in the three facilities as functions of the angle of attack. These data are used, first, to assess the integral coefficients at the cruise point and, secondly, as a reference for the angle-of-attack sweep. The three data sets do not coincide exactly: at $M_\infty = 0.85$, for instance, the drag measured in the NTF is 16 counts lower than that measured in the ETW~\cite{rivers2015}. The spread among the facilities is therefore taken as a practical measure of the experimental uncertainty.
 
@@ -133,8 +162,25 @@ The computational grids were generated with Ansys Fluent Meshing (2024 R2), usin
 
 The geometry was imported from the CAD files distributed for DPW-VI, using the undeformed wing, and its surfaces were split into five groups: fuselage, wing, horizontal tail and the blunt trailing-edge bases of the wing and of the tail. This subdivision allows a different sizing control to be applied to each component, as described in Section~\ref{sec:val_surfmesh}.
 
-% FIGURA (da decidere): schema del dominio sul piano di simmetria con le quote (fig:val_domain)
-The computational domain consists of a half-cylinder closed upstream by a hemispherical cap, both with a radius of \SI{350}{m}, for an overall length of \SI{850}{m}. The aircraft is placed approximately on the axis of the domain, so that the outer boundaries lie about $47\,c_\mathrm{ref}$ upstream of the fuselage nose, about $74\,c_\mathrm{ref}$ downstream of it and $50\,c_\mathrm{ref}$ in the radial direction. These distances were chosen to keep the outer boundaries far enough from the aircraft to prevent them from influencing the solution.  
+The computational domain, shown in Figure~\ref{fig:val_domain}, consists of a half-cylinder closed upstream by a hemispherical cap, both with a radius of \SI{350}{m}, for an overall length of \SI{850}{m}. The aircraft is placed approximately on the axis of the domain, so that the outer boundaries lie about $47\,c_\mathrm{ref}$ upstream of the fuselage nose, about $74\,c_\mathrm{ref}$ downstream of it and $50\,c_\mathrm{ref}$ in the radial direction. These distances were chosen to keep the outer boundaries far enough from the aircraft to prevent them from influencing the solution.  
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \node[anchor=south west, inner sep=0] (img) at (0,0) {\includegraphics[width=0.95\linewidth]{fig_dominio}};
+    \begin{scope}[x={(img.south east)}, y={(img.north west)},
+                  lab/.style={font=\footnotesize, fill=white, fill opacity=0.75, text opacity=1, rounded corners=1pt, inner sep=2pt}]
+      \node[lab] at (0.117,0.749) {Upstream cap};
+      \node[lab] at (0.653,0.712) {Lateral surface};
+      \node[lab] at (0.860,0.524) {Outlet};
+      \node[lab] at (0.344,0.200) {Symmetry plane};
+      \node[lab] (ac) at (0.200,0.450) {Aircraft (half model)};
+      \draw[-latex, thin] (ac.east) -- (0.370,0.355);
+    \end{scope}
+  \end{tikzpicture}
+  \caption{Computational domain: a half-cylinder of radius \SI{350}{m} closed upstream by a hemispherical cap, for an overall length of \SI{850}{m}. The half model of the aircraft lies on the symmetry plane, at the centre of the domain; the $x$ axis is aligned with the fuselage, $y$ is normal to the symmetry plane and $z$ is vertical.}
+  \label{fig:val_domain}
+\end{figure}
 
 \subsection{Surface mesh}
 \label{sec:val_surfmesh}
